@@ -1,0 +1,42 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f2f2f2; /* Added background color for clarity */
+}
+
+.login-form {
+    width: 300px;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center; /* Center align the form contents */
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.modal-input {
+    width: 93%;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+.btn {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    background-color: #7878ea;
+    color: #fff;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background-color: #6c6cd9;
+}

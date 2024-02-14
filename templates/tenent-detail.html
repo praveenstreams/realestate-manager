@@ -1,0 +1,45 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{% static '/css/style.css' %}">
+    <title>Your Property Management System</title>
+</head>
+<body>
+<div class="container">
+    <header class="header">
+        <h1>Tenant Details</h1>
+    </header>
+    {% include 'logout.html' %}
+    <main class="main-content">
+        <div class="property-details">
+            <div class="property-info">
+                <h2>{{tenant.name}}</h2>
+                <div class="property-address">
+                    <span>Adreess Line1:</span>
+                    <span>{{tenant.addressline1}}</span><br>
+                    <span>Address Line2:</span>
+                    <span>{{tenant.addressline2}}</span><br>
+                </div>
+            </div>
+            <div class="unit-list">
+            </div>
+        </div>
+
+
+    </main>
+    <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="type" value="open-assign">
+        <input type="hidden" name="tenant-id" value="{{tenant.id}}">
+        <input type="hidden" name="tenant-name" value="{{tenant.name}}">
+    <button class="add-prop-button btn">Assign property</button>
+    </form>
+</div>
+</body>
+
+
+</html>

@@ -1,0 +1,126 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{% static '/css/style.css' %}">
+    <title>Your Property Management System</title>
+</head>
+<body>
+<div class="container">
+    <header class="header">
+        <h1>Property Details</h1>
+    </header>
+    <main class="main-content">
+
+
+        <div class="property-details">
+            {% include 'logout.html' %}
+            <button class="add-unit-btn btn margin-right">Add New Unit</button>
+            <div class="property-info">
+                <h2>{{prop.name}}</h2>
+                <div class="property-address">
+                    <span>Region:</span>
+                    <span>{{prop.region}}</span><br>
+                    <span>Street:</span>
+                    <span>{{prop.street}}</span><br>
+                    <span>PinCode:</span>
+                    <span>{{prop.pincode}}</span><br>
+                    <span>Landmark:</span>
+                    <span>{{prop.land_mark}}</span><br>
+                    <span>Features:</span>
+                    <span>{{prop.features}}</span><br>
+                </div>
+            </div>
+            <div class="line"></div>
+            <div class="unit-list ">
+                {% if units %}
+                {% for j in units %}
+                    <div class="unit-item">
+                        <span>Rent:</span>
+                        <span>{{j.unit.rent}}</span><br>
+                        <span>Unit type:</span>
+                        <span>{{j.unit.unit_type}}</span><br>
+                        {% if j.unit.is_available %}
+                            <p class="green">Available</p>
+                        {% else %}
+                        <form method="GET" action="view-agreement">
+                            <input type="hidden" name="id" value="{{j.agreement.id}}">
+                        <button class="btn">View Agreement</button>
+                        </form>
+                            <p class="red">Occupied</p>
+
+                        {% endif %}
+                    </div>
+                    <div class="line"></div>
+                {% endfor %}
+                {% else %}
+                <p>No units found</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="add-unit-modal modal">
+            <form action="" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="prop-id" value="{{prop.id}}">
+                <input type="hidden" name="type" value="add-unit">
+                <input class="modal-input" required name="rent" type="text" placeholder="Rent amount"><br>
+                <select class="modal-input" required name="unit-type" placeholder="Unit type">
+                    <option value="">Select Unit Type</option>
+                    <option value="1BHK">1BHK</option>
+                    <option value="2BHK">2BHK</option>
+                    <option value="3BHK">3BHK</option>
+                    <option value="4BHK">4BHK</option>
+                </select><br>
+                <button class="save-unit-button btn">Save</button>
+            </form>
+        </div>
+    </main>
+</div>
+</body>
+
+<script>
+    $('.add-unit-btn').click(function(){
+        $('.add-unit-modal').show();
+    });
+    $('.save-unit-button').click(function(){
+
+    });
+
+
+
+
+
+    $(document).ready(function() {
+        $(".save-unit-button").click(function(event) {
+            event.preventDefault();
+
+            $(".modal-input").removeClass("error");
+
+            var rent = $("input[name='rent']").val();
+            var unitType = $("select[name='unit-type']").val();
+
+            var errorFields = [];
+
+            if (rent === '') {
+                errorFields.push("input[name='rent']");
+            }
+            if (unitType === '') {
+                errorFields.push("select[name='unit-type']");
+            }
+
+            $(errorFields.join(",")).addClass("error");
+
+            if (errorFields.length === 0) {
+                $("form").submit();
+                $('.add-unit-modal').hide();
+                alert("Unit added successfully.")
+
+            }
+        });
+    });
+</script>
+</html>

@@ -1,0 +1,124 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{% static '/css/style.css' %}">
+    <title>Title</title>
+</head>
+<body>
+<div class="container">
+    <header class="header">
+        <h1>
+        Tenants
+            </h1>
+    </header>
+    <main class="main-content">
+
+        <div class="tenant-list">
+            {% include 'logout.html' %}
+            <form method="get" action="/property">
+            <button class="add-tenant-btn margin-right btn margin-right">Go To Properties</button>
+            </form>
+            <button class="add-tenant-btn add-tenant-btn-modal margin-right btn">Add New Tenant</button>
+            <div class="tenant-items">
+                {% if tenants %}
+                {% for tenant in tenants %}
+                <div class="property-item">
+                    <h4>{{tenant.name}}</h4>
+                    <p>{{tenant.addressline1}}</p>
+                    <p>{{tenant.addressline2}}</p>
+
+                    <form method="get">
+                        <input type="hidden" name="tenant-id" value="{{tenant.id}}">
+                        <input type="hidden" name="type" value="get-tenant">
+                        {% if tenant.is_assigned %}
+                        <p class="green">Assigned</p>
+                        {% endif %}
+
+                        <button class="btn view-prop">View</button>
+                    </form>
+                    <div class="line"></div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <p>No tenant found..</p>
+                {% endif %}
+
+            </div>
+
+        </div>
+        <div class="add-tenant-modal modal">
+            <form action="" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input name="type" type="hidden" value="add-tenant"><br>
+                <input class="modal-input" required name="name" type="text" placeholder="Name"><br>
+                <input class="modal-input" required name="address1" type="text" placeholder="Addressline1"><br>
+                <input class="modal-input" required name="address2" type="text" placeholder="Addressline2"><br>
+                <select class="modal-input" required name="proof-type" placeholder="Proof type">
+                    <option value="">Select Proof Type</option>
+                    <option value="DRIVING LICENSE">DRIVING LICENSE</option>
+                    <option value="ADHAR">ADHAR</option>
+                </select><br>
+                <input class="modal-input" name="proof-image" type="file" placeholder="Proof Image"><br>
+                <button class="save-tenant-button btn">Save</button>
+            </form>
+        </div>
+    </main>
+
+</div>
+
+</body>
+<script>
+    $('.add-tenant-btn-modal').click(function(){
+        $('.add-tenant-modal').show();
+    });
+
+
+
+
+
+    $(document).ready(function() {
+        $(".save-tenant-button").click(function(event) {
+            event.preventDefault();
+
+            $(".modal-input").removeClass("error");
+
+            var name = $("input[name='name']").val();
+            var address1 = $("input[name='address1']").val();
+            var address2 = $("input[name='address2']").val();
+            var proofType = $("select[name='proof-type']").val();
+            var proofImage = $("input[name='proof-image']").val();
+
+            var errorFields = [];
+
+            if (name === '') {
+                errorFields.push("input[name='name']");
+            }
+            if (address1 === '') {
+                errorFields.push("input[name='address1']");
+            }
+            if (address2 === '') {
+                errorFields.push("input[name='address2']");
+            }
+            if (proofType === '') {
+                errorFields.push("select[name='proof-type']");
+            }
+            if (proofImage === '') {
+                errorFields.push("input[name='proof-image']");
+            }
+
+            $(errorFields.join(",")).addClass("error");
+
+            if (errorFields.length === 0) {
+                $("form").submit();
+                $('.add-tenant-modal').hide();
+                alert("Tenant added sucessfully")
+            }
+        });
+    });
+</script>
+</html>

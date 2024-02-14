@@ -1,0 +1,87 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{% static '/css/style.css' %}">
+    <title>Your Property Management System</title>
+</head>
+
+<body>
+<div class="container">
+    {% include 'logout.html' %}
+    <header class="header">
+        <h1>Agreement Assignment</h1>
+    </header>
+    <main class="main-content" style="display: block; !important">
+        <div class="details-container">
+            <div class="details-section tenant-details">
+                <h3>Tenant Details</h3>
+                <p><strong>Name:</strong> {{tenant.name}}</p>
+                <p><strong>Address Line 1:</strong> {{tenant.addressline1}}</p>
+                <p><strong>Address Line 2:</strong> {{tenant.addressline2}}</p>
+                <img height="80" width="150" src="{{ image_url }}" alt="Tenant Photo">
+            </div>
+            <div class="details-section property-details">
+                <h3>Property Details</h3>
+                <p><strong>Name:</strong> {{prop.name}}</p>
+                <p><strong>Region:</strong> {{prop.region}}</p>
+                <p><strong>Street:</strong> {{prop.street}}</p>
+                <p><strong>Pincode:</strong> {{prop.pincode}}</p>
+                <p><strong>Landmark:</strong> {{prop.landmark}}</p>
+                <p><strong>Features:</strong> {{prop.features}}</p>
+            </div>
+            <div class="details-section unit-details">
+                <h3>Selected Unit Details</h3>
+                <p><strong>Rent:</strong> {{unit.rent}}</p>
+                <p><strong>Unit Type:</strong> {{unit.unit_type}}</p>
+                <span>Select Agreement End Date</span><br>
+                <form method="post">
+                    {% csrf_token %}
+
+                    <input type="hidden" name="tenant-id" value="{{tenant.id}}">
+                    <input type="hidden" name="unit-id" value="{{unit.id}}">
+                    <input type="hidden" name="type" value="generate-agreement">
+                    <input class="modal-input" type="date" name="agreement-end-date"/><br>
+                    <input class="modal-input" type="number" name="rent-date" placeholder="Enter rent date"/>
+                    <button class="btn assign">Generate Agreement</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+</div>
+
+</body>
+<script>
+    $(".assign").click(function(){
+
+    })
+
+
+    $(document).ready(function() {
+        $(".assign").click(function(event) {
+            event.preventDefault();
+            $(".modal-input").removeClass("error");
+            var agreementEndDate = $("input[name='agreement-end-date']").val();
+            var rentDate = $("input[name='rent-date']").val();
+            var errorFields = [];
+            if (agreementEndDate === '') {
+                errorFields.push("input[name='agreement-end-date']");
+            }
+            if (rentDate === '') {
+                errorFields.push("input[name='rent-date']");
+            }
+            $(errorFields.join(",")).addClass("error");
+            if (errorFields.length === 0) {
+                $("form").submit();
+
+                alert("Agreement generated sucessfully")
+            }
+        });
+    });
+</script>
+
+</html>

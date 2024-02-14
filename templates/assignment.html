@@ -1,0 +1,115 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{% static '/css/style.css' %}">
+</head>
+<body>
+<div class="container">
+    <header class="header">
+        <h1>Properties and Units</h1>
+    </header>
+
+    {% include 'logout.html' %}
+    <div style="display:flex;">
+    <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="type" value="open-assign">
+        <input type="hidden" name="search" value="open-assign">
+         <input name="keyword"  class="margin-right" style=" height:28px;" type="text" placeholder="Enter unit type">
+        <input type="hidden" name="tenant-id" value="{{tenant_id}}">
+        <input type="hidden" name="tenant-name" value="{{username}}">
+        <button class="btn-search margin-right">Search</button>
+    </form>
+
+    <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="type" value="open-assign">
+        <input type="hidden" name="tenant-id" value="{{tenant_id}}">
+        <input type="hidden" name="tenant-name" value="{{username}}">
+        <button class="btn-search margin-right">Clear Search</button>
+    </form>
+        </div>
+
+    <h3>{{username}}</h3>
+    <main class="main-content">
+
+        <div class="properties-column">
+            <h3>Properties</h3>
+            <div class="property-items">
+                {% for i in props %}
+                <div class="property-item">
+                    <h2>{{i.name}}</h2>
+                    <p>{{i.region}}</p>
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="tenant-id" value="{{tenant_id}}">
+                        <input type="hidden" name="tenant-name" value="{{username}}">
+                        <input type="hidden" name="prop-id" value="{{i.id}}">
+                        <input type="hidden" name="type" value="get-prop-details">
+                        <button class="btn view-prop">Expand</button>
+                    </form>
+                    <div class="line"></div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="assign-tenant-modal modal">
+            <form action="" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="prop-id" value="{{prop.id}}">
+                <input type="hidden" name="" value="{{prop.id}}">
+
+                <input type="hidden" name="type" value="generate-agrement">
+                <input class="modal-input" required name="rent" type="number" placeholder="Rent amount"><br>
+                <span>Agreement end date</span><br>
+                <input class="modal-input" name="end-date" type="date" placeholder="Agreement end date"><br>
+                <input class="modal-input" name="rent-date" type="text" placeholder="Rent date"><br>
+                <button class="save-unit-button btn">Generate Agreement</button>
+            </form>
+        </div>
+        <div class="units-column">
+            <h3>Units</h3>
+            <div class="unit-list" style="margin-top: 77px;">
+                {% for j in units %}
+                    <div class="unit-item">
+                        <span>Rent:</span>
+                        <span>{{j.rent}}</span><br>
+                        <span>Unit type:</span>
+                        <span>{{j.unit_type}}</span><br>
+                        {% if j.is_available %}
+                        <form method="get">
+                            {% csrf_token %}
+<!--                            <input type="hidden" name="prop-id" value="{{prop.id}}">-->
+                            <input type="hidden" name="tenant-id" value="{{tenant_id}}">
+                            <input type="hidden" name="unit-id" value="{{j.id}}">
+                            <input type="hidden" name="type" value="agreement-preview">
+
+                            <button class="btn assign-modal-open">Assign</button>
+                        </form>
+                            <p class="green">Available</p>
+
+                        {% else %}
+                            <p class="red">Occupied</p>
+                        {% endif %}
+                    </div>
+                    <div class="line"></div>
+                {% endfor %}
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+<script>
+<!--    $('.assign-modal-open').click(function(){-->
+<!--        $('.assign-tenant-modal').show();-->
+<!--    });-->
+<!--    $('.save-unit-button').click(function(){-->
+<!--        $('.add-unit-modal').hide();-->
+<!--    });-->
+</script>
+</html>

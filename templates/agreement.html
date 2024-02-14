@@ -1,0 +1,54 @@
+
+
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rent Agreement</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{% static '/css/style.css' %}">
+</head>
+<body class="agreement-body">
+    <div class="agreement-container">
+        {% include 'logout.html' %}
+        <header class="header">
+            <h1>Rent Agreement</h1>
+
+        </header>
+
+        <div class="agreement-content">
+            <div class="agreement-section">
+                <h2>Tenant Details</h2>
+
+                <p>{{agreement.user.name}}</p>
+                <p>{{agreement.user.addressline1}}</p>
+                <p>{{agreement.user.addressline2}}</p>
+                <img height="80" width="150" src="{{ image_url }}" alt="Tenant Photo">
+            </div>
+            <div class="agreement-section">
+                <h2>Property Details</h2>
+                <p>{{agreement.unit.property.name}}</p>
+                <p>{{agreement.unit.property.region}}</p>
+                <p>{{agreement.unit.property.street}}</p>
+                <p>{{agreement.unit.property.pin}}</p>
+                <p>{{agreement.unit.property.land_mark}}</p>
+            </div>
+            <div class="agreement-section">
+                <h2>Unit Details</h2>
+                <p>{{agreement.unit.unit_type}}</p>
+                <p>{{agreement.unit.rent}}</p>
+            </div>
+            <div class="agreement-section">
+                <h2>Agreement Details</h2>
+                <p><strong>Agreement End Date:</strong> {{agreement.agreement_end_date}}</p>
+                <p><strong>Rent Date:</strong> {{agreement.rent_date}}</p>
+                <p><strong>Rent:</strong> {{agreement.rent}}</p>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,119 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{% static '/css/style.css' %}">
+    <title>Your Property Management System</title>
+</head>
+
+<body>
+<div class="container">
+
+    <header class="header">
+        <h1>Property Management System</h1>
+    </header>
+    <main class="main-content">
+        <div class="properties-list">
+            {% include 'logout.html' %}
+            <form method="get" action="/tenant">
+            <button class="add-tenant-btn margin-right btn margin-right">Go To Tenant</button>
+            </form>
+
+            <button class="add-prop-button btn margin-right">Add New Property</button>
+
+            <div class="property-items">
+                {% if props %}
+                {% for i in props %}
+                <div class="property-item">
+                    <h2>{{i.name}}</h2>
+                    <p>{{i.region}}</p>
+                    <form method="get">
+                        <input type="hidden" name="prop-id" value="{{i.id}}">
+                        <input type="hidden" name="type" value="get-prop">
+                        <button class="btn view-prop">View</button>
+                    </form>
+                    <div class="line"></div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <p>No properies..</p>
+                {% endif %}
+            </div>
+        </div>
+        <div class="add-property-modal modal">
+            <form action="" method="post">
+                {% csrf_token %}
+                <input name="type" type="hidden" value="add-prop"><br>
+                <input class="modal-input" required name="prop-name" type="text" placeholder="Property Name"><br>
+                <input class="modal-input" required name="region" type="text" placeholder="Region"><br>
+                <input class="modal-input" required name="street" type="text" placeholder="Street"><br>
+                <input class="modal-input" required name="pin" type="number" placeholder="Pin Code"><br>
+                <input class="modal-input" name="landmark" type="text" placeholder="Landmark"><br>
+                <input class="modal-input" name="features" type="text" placeholder="Add Features (Optional)"><br>
+                <button class="save-prop-button btn">Save</button>
+            </form>
+        </div>
+    </main>
+
+</div>
+</body>
+
+<script>
+    $('.add-prop-button').click(function(){
+        $('.add-property-modal').show();
+    });
+
+
+
+
+
+$(document).ready(function() {
+        $(".save-prop-button").click(function(event) {
+            event.preventDefault();
+
+            $(".modal-input").removeClass("error");
+
+            var propName = $("input[name='prop-name']").val();
+            var region = $("input[name='region']").val();
+            var street = $("input[name='street']").val();
+            var pin = $("input[name='pin']").val();
+
+            var errorFields = [];
+
+            if (propName === '') {
+                errorFields.push("input[name='prop-name']");
+            }
+            if (region === '') {
+                errorFields.push("input[name='region']");
+            }
+            if (street === '') {
+                errorFields.push("input[name='street']");
+            }
+            if (pin === '' || isNaN(pin)) {
+                errorFields.push("input[name='pin']");
+            }
+
+            $(errorFields.join(",")).addClass("error");
+
+            if (errorFields.length === 0) {
+                $("form").submit();
+
+
+                alert("Property added successfully.")
+                $('.add-property-modal').hide();
+
+            }
+        });
+    });
+
+
+
+</script>
+
+<style>
+
+</style>
+</html>
